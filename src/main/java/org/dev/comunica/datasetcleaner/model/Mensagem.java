@@ -1,14 +1,18 @@
 package org.dev.comunica.datasetcleaner.model;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HexFormat;
+
 public class Mensagem {
     private String md5 = "";
-    private int tipo;
+    private long tipo;
     private String conteudo;
     private boolean verificado;
     private boolean fake;
     private String justificativa;
 
-    public Mensagem(int tipo, String conteudo, boolean verificado, boolean fake, String justificativa) {
+    public Mensagem(long tipo, String conteudo, boolean verificado, boolean fake, String justificativa) {
         this.tipo = tipo;
         this.conteudo = conteudo;
         this.verificado = verificado;
@@ -18,18 +22,29 @@ public class Mensagem {
 
     @Override
     public final String toString() {
-        return String.format("%s,%d,\"%s\",%d,%d,%s", md5, tipo, conteudo, verificado ? 1 : 0, fake ? 1 : 0, justificativa);
+        try {
+            return String.format("%s,%d,\"%s\",%d,%d,%s", getMd5(), tipo, conteudo, verificado ? 1 : 0, fake ? 1 : 0, justificativa);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return String.format("%s,%d,\"%s\",%d,%d,%s", md5, tipo, conteudo, verificado ? 1 : 0, fake ? 1 : 0, justificativa);
+
+           
+        }
     }
 
-    public String getMd5() {
-        return md5;
+    public String getMd5() throws NoSuchAlgorithmException {
+
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        md.update(conteudo.getBytes());
+        byte[] digest = md.digest();
+        return HexFormat.of().withUpperCase().formatHex(digest);
     }
 
     public void setMd5(String md5) {
         this.md5 = md5;
     }
 
-    public int getTipo() {
+    public long getTipo() {
         return tipo;
     }
 

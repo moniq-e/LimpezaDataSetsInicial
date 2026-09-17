@@ -121,7 +121,11 @@ public class Frame extends JFrame {
         enviar.addActionListener(e -> {
             var indexado = new int[combos.size()];
             for (int i = 0; i < combos.size(); i++) {
-                indexado[i] = combos.get(i).getItemAt(i).valor();
+                // 1. Pega o item que o usuário de fato selecionou
+                Coluna colunaSelecionada = (Coluna) combos.get(i).getSelectedItem();
+                
+                // 2. Extrai o valor dele
+                indexado[i] = colunaSelecionada.valor();
             }
 
             try {
@@ -131,6 +135,9 @@ public class Frame extends JFrame {
             }
 
             CSV.gerarCSV(mensagens, file.getName().substring(0, file.getName().length() - 4));
+            
+            // Dica: Adicione um aviso visual para saber que terminou!
+            JOptionPane.showMessageDialog(this, "Arquivo gerado com sucesso!");
         });
 
         panel.add(lbTipo);
