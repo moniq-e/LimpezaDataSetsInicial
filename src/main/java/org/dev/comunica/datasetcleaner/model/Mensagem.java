@@ -27,17 +27,18 @@ public class Mensagem {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             return String.format("%s,%d,\"%s\",%d,%d,%s", md5, tipo, conteudo, verificado ? 1 : 0, fake ? 1 : 0, justificativa);
-
-           
         }
     }
 
     public String getMd5() throws NoSuchAlgorithmException {
+        if (md5.isBlank()) {
+            var md = MessageDigest.getInstance("MD5");
+            md.update(conteudo.getBytes());
+            var digest = md.digest();
 
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        md.update(conteudo.getBytes());
-        byte[] digest = md.digest();
-        return HexFormat.of().withUpperCase().formatHex(digest);
+            md5 = HexFormat.of().withUpperCase().formatHex(digest);
+        }
+        return md5;
     }
 
     public void setMd5(String md5) {

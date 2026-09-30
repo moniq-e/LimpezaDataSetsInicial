@@ -12,7 +12,7 @@ public class CSV {
     public static Coluna[] lerColunas(File path) throws Exception {
         var res = new ArrayList<Coluna>();
         
-        try (CSVReader reader = new CSVReader(new FileReader(path))) {
+        try (var reader = new CSVReader(new FileReader(path))) {
             String[] colunas = reader.readNext(); // Lê a primeira linha (cabeçalho)
             
             if (colunas != null) {
@@ -21,18 +21,16 @@ public class CSV {
                 }
             }
         }
-        
-        return res.toArray(new Coluna[0]);
+        return res.toArray(new Coluna[res.size()]);
     }
 
     public static Mensagem[] lerCSV(File path, int[] colunas) throws Exception {
         var res = new ArrayList<Mensagem>();
         
-        try (CSVReader reader = new CSVReader(new FileReader(path))) {
+        try (var reader = new CSVReader(new FileReader(path))) {
             reader.readNext(); // Pula a primeira linha (cabeçalho)
             
             String[] linha;
-            // Lê linha por linha. O OpenCSV já lida com vírgulas dentro de aspas duplas!
             while ((linha = reader.readNext()) != null) {
                 try {
                     var d = converter(linha, colunas);
@@ -44,8 +42,7 @@ public class CSV {
                 }
             }
         }
-        
-        return res.toArray(new Mensagem[0]);
+        return res.toArray(new Mensagem[res.size()]);
     }
 
     public static void gerarCSV(Mensagem[] mensagens, String fileName) {
@@ -54,8 +51,8 @@ public class CSV {
             writer.write("md5,tipo,conteudo,verificado,fake,justificativa\n");
             
             for (int i = 0; i < mensagens.length; i++) {
-                if (mensagens[i].getConteudo().length() > 10) {
-                    writer.write(mensagens[i].toString() + "\n");    
+                if (Filtro.filtro(mensagens[i])) {
+                    writer.write(mensagens[i].toString() + "\n");
                 }
             }
         } catch (IOException e) {
@@ -64,7 +61,6 @@ public class CSV {
     }
 
     private static Mensagem converter(String[] dados, int[] colunas) {
-        // Utilizamos a abordagem segura com tratamento do "long" para o ID
         String idStr = obterValorSeguro(dados, colunas[0]);
         String conteudo = obterValorSeguro(dados, colunas[1]);
         String verificadoStr = obterValorSeguro(dados, colunas[2]);
