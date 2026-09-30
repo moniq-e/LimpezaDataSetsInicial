@@ -21,6 +21,8 @@ public class CSV {
                 }
             }
         }
+        res.add(new Coluna("Valor Padrão: Falso", res.size()));
+        res.add(new Coluna("Valor Padrão: Verdadeiro", res.size()));
         return res.toArray(new Coluna[res.size()]);
     }
 
@@ -68,13 +70,19 @@ public class CSV {
         String justificativa = obterValorSeguro(dados, colunas[4]);
 
         long id = idStr.isEmpty() ? 0L : Long.parseLong(idStr);
-        boolean verificado = verificadoStr.equals("1");
-        boolean fake = fakeStr.equals("1");
+        boolean verificado = "1simtrueverdadeiro".contains(verificadoStr);
+        boolean fake = "1simtrueverdadeiro".contains(fakeStr);
 
         return new Mensagem(id, conteudo, verificado, fake, justificativa);
     }
 
     private static String obterValorSeguro(String[] dados, int indice) {
+        if (indice == dados.length) {
+            return "0";
+        } else if (indice == dados.length + 1) {
+            return "1";
+        }
+
         if (indice >= 0 && indice < dados.length) {
             return dados[indice].trim(); 
         }
