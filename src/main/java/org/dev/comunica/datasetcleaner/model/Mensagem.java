@@ -5,60 +5,63 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HexFormat;
 
 public class Mensagem {
-    private String md5 = "";
-    private long tipo;
-    private String conteudo;
+    private String titulo;
+    private String texto;
+    private String hashConteudo = "";
     private boolean verificado;
-    private boolean fake;
-    private String justificativa;
+    private String url;
+    private String resumo;
 
-    public Mensagem(long tipo, String conteudo, boolean verificado, boolean fake, String justificativa) {
-        this.tipo = tipo;
-        this.conteudo = conteudo;
+    public Mensagem(String titulo, String texto, boolean verificado, String url, String resumo) {
+        this.titulo = titulo;
+        this.texto = texto;
         this.verificado = verificado;
-        this.fake = fake;
-        this.justificativa = justificativa;
+        this.url = url;
+        this.resumo = resumo;
     }
 
     @Override
     public final String toString() {
         try {
-            return String.format("%s,%d,\"%s\",%d,%d,%s", getMd5(), tipo, conteudo, verificado ? 1 : 0, fake ? 1 : 0, justificativa);
+            return String.format("\"%s\",\"%s\",%s,%d,\"%s\",\"%s\"", 
+                titulo, texto, getHashConteudo(), verificado ? 1 : 0, url, resumo);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-            return String.format("%s,%d,\"%s\",%d,%d,%s", md5, tipo, conteudo, verificado ? 1 : 0, fake ? 1 : 0, justificativa);
+            return String.format("\"%s\",\"%s\",%s,%d,\"%s\",\"%s\"", 
+                titulo, texto, hashConteudo, verificado ? 1 : 0, url, resumo);
         }
     }
 
-    public String getMd5() throws NoSuchAlgorithmException {
-        if (md5.isBlank()) {
+    public String getHashConteudo() throws NoSuchAlgorithmException {
+        if (hashConteudo == null || hashConteudo.isBlank()) {
             var md = MessageDigest.getInstance("MD5");
-            md.update(conteudo.getBytes());
+            // Calcula o hash baseado no texto (ou titulo + texto, se preferir)
+            md.update(texto != null ? texto.getBytes() : new byte[0]);
             var digest = md.digest();
 
-            md5 = HexFormat.of().withUpperCase().formatHex(digest);
+            hashConteudo = HexFormat.of().withUpperCase().formatHex(digest);
         }
-        return md5;
+        return hashConteudo;
     }
 
-    public void setMd5(String md5) {
-        this.md5 = md5;
+    public void setHashConteudo(String hashConteudo) {
+        this.hashConteudo = hashConteudo;
     }
 
-    public long getTipo() {
-        return tipo;
+    public String getTitulo() {
+        return titulo;
     }
 
-    public void setTipo(int tipo) {
-        this.tipo = tipo;
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
     }
 
-    public String getConteudo() {
-        return conteudo;
+    public String getTexto() {
+        return texto;
     }
 
-    public void setConteudo(String conteudo) {
-        this.conteudo = conteudo;
+    public void setTexto(String texto) {
+        this.texto = texto;
     }
 
     public boolean isVerificado() {
@@ -69,19 +72,19 @@ public class Mensagem {
         this.verificado = verificado;
     }
 
-    public boolean isFake() {
-        return fake;
+    public String getUrl() {
+        return url;
     }
 
-    public void setFake(boolean fake) {
-        this.fake = fake;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-    public String getJustificativa() {
-        return justificativa;
+    public String getResumo() {
+        return resumo;
     }
 
-    public void setJustificativa(String justificativa) {
-        this.justificativa = justificativa;
+    public void setResumo(String resumo) {
+        this.resumo = resumo;
     }
 }

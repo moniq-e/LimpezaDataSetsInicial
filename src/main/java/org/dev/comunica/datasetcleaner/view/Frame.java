@@ -43,21 +43,21 @@ public class Frame extends JFrame {
         Font labelFont = new Font("Segoe UI", Font.BOLD, 13);
         Color textColor = new Color(55, 65, 81);
 
-        var lbTipo = new JLabel("Tipo:");
-        lbTipo.setFont(labelFont);
-        lbTipo.setForeground(textColor);
-        var txtTipo = new JComboBox<Coluna>();
-        txtTipo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        combos.add(txtTipo);
-        txtTipo.setEnabled(false);
+        var lbTitulo = new JLabel("Titulo:");
+        lbTitulo.setFont(labelFont);
+        lbTitulo.setForeground(textColor);
+        var txtTitulo = new JComboBox<Coluna>();
+        txtTitulo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        combos.add(txtTitulo);
+        txtTitulo.setEnabled(false);
 
-        var lbConteudo = new JLabel("Conteúdo:");
-        lbConteudo.setFont(labelFont);
-        lbConteudo.setForeground(textColor);
-        var txtConteudo = new JComboBox<Coluna>();
-        txtConteudo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        combos.add(txtConteudo);
-        txtConteudo.setEnabled(false);
+        var lbTexto = new JLabel("Texto:");
+        lbTexto.setFont(labelFont);
+        lbTexto.setForeground(textColor);
+        var txtTexto = new JComboBox<Coluna>();
+        txtTexto.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        combos.add(txtTexto);
+        txtTexto.setEnabled(false);
 
         var lbVerificado = new JLabel("Verificado:");
         lbVerificado.setFont(labelFont);
@@ -67,21 +67,21 @@ public class Frame extends JFrame {
         combos.add(txtVerificado);
         txtVerificado.setEnabled(false);
 
-        var lbFake = new JLabel("Fake:");
-        lbFake.setFont(labelFont);
-        lbFake.setForeground(textColor);
-        var txtFake = new JComboBox<Coluna>();
-        txtFake.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        combos.add(txtFake);
-        txtFake.setEnabled(false);
+        var lbUrl = new JLabel("URL (verificação):");
+        lbUrl.setFont(labelFont);
+        lbUrl.setForeground(textColor);
+        var txtUrl = new JComboBox<Coluna>();
+        txtUrl.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        combos.add(txtUrl);
+        txtUrl.setEnabled(false);
 
-        var lbJustificativa = new JLabel("Justificativa:");
-        lbJustificativa.setFont(labelFont);
-        lbJustificativa.setForeground(textColor);
-        var txtJustificativa = new JComboBox<Coluna>();
-        txtJustificativa.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        combos.add(txtJustificativa);
-        txtJustificativa.setEnabled(false);
+        var lbResumo = new JLabel("Resumo (verificação):");
+        lbResumo.setFont(labelFont);
+        lbResumo.setForeground(textColor);
+        var txtResumo = new JComboBox<Coluna>();
+        txtResumo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        combos.add(txtResumo);
+        txtResumo.setEnabled(false);
 
         var selectSheet = new JButton("Escolher Arquivo (.csv)");
         selectSheet.setFont(new Font("Segoe UI", Font.BOLD, 12));
@@ -140,20 +140,20 @@ public class Frame extends JFrame {
             JOptionPane.showMessageDialog(this, "Arquivo gerado com sucesso!");
         });
 
-        panel.add(lbTipo);
-        panel.add(txtTipo);
+        panel.add(lbTitulo);
+        panel.add(txtTitulo);
 
-        panel.add(lbConteudo);
-        panel.add(txtConteudo);
+        panel.add(lbTexto);
+        panel.add(txtTexto);
 
         panel.add(lbVerificado);
         panel.add(txtVerificado);
 
-        panel.add(lbFake);
-        panel.add(txtFake);
+        panel.add(lbUrl);
+        panel.add(txtUrl);
 
-        panel.add(lbJustificativa);
-        panel.add(txtJustificativa);
+        panel.add(lbResumo);
+        panel.add(txtResumo);
 
         panel.add(selectSheet);
         panel.add(enviar);
