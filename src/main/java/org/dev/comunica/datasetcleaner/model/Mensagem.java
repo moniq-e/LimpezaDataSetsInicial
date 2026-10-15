@@ -23,12 +23,12 @@ public class Mensagem {
     @Override
     public final String toString() {
         try {
-            return String.format("\"%s\",\"%s\",%s,%d,\"%s\",\"%s\"", 
-                titulo, texto, getHashConteudo(), verificado ? 1 : 0, url, resumo);
+            return String.format("'%s','%s','%s','%d'", 
+                titulo, texto, getHashConteudo(), verificado ? 1 : 0);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-            return String.format("\"%s\",\"%s\",%s,%d,\"%s\",\"%s\"", 
-                titulo, texto, hashConteudo, verificado ? 1 : 0, url, resumo);
+            return String.format("'%s','%s','%s','%d'", 
+                titulo, texto, hashConteudo, verificado ? 1 : 0);
         }
     }
 

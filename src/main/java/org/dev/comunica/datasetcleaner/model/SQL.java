@@ -7,7 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class CSV {
+public class SQL {
 
     public static Coluna[] lerColunas(File path) throws Exception {
         var res = new ArrayList<Coluna>();
@@ -47,33 +47,39 @@ public class CSV {
         return res.toArray(new Mensagem[res.size()]);
     }
 
-    public static void gerarCSV(Mensagem[] mensagens, String fileName) {
-        // Mantido exatamente como o original para não quebrar a estrutura da classe Mensagem
-        try (var writer = new FileWriter(fileName + "-filtrado.csv")) {
-            writer.write("md5,tipo,conteudo,verificado,fake,justificativa\n");
+    public static void gerarSQL(Mensagem[] mensagens, String fileName) {
+        try (var writer = new FileWriter(fileName + "-filtrado.sql")) {
+            writer.write("START TRANSACTION;\n\n");
             
             for (int i = 0; i < mensagens.length; i++) {
-                if (Filtro.filtro(mensagens[i])) {
-                    writer.write(mensagens[i].toString() + "\n");
+                if (!Filtro.filtro(mensagens[i])) continue;
+
+                writer.write(String.format("INSERT INTO Noticia (titulo, texto, hash_conteudo, verificado) VALUES (%s);\n", mensagens[i].toString()));
+
+                if (mensagens[i].getUrl() != null && !mensagens[i].getUrl().isBlank()) {
+                    writer.write("SET @noticia_id = LAST_INSERT_ID();\n");
+                    writer.write(String.format("INSERT INTO Fonte_Consultada (noticia_id, url, resumo) VALUES (@noticia_id,'%s', '%s');\n", mensagens[i].getUrl(), mensagens[i].getResumo()));
                 }
             }
+            writer.write("\nCOMMIT;\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private static Mensagem converter(String[] dados, int[] colunas) {
-        String idStr = obterValorSeguro(dados, colunas[0]);
-        String conteudo = obterValorSeguro(dados, colunas[1]);
+        String titulo = obterValorSeguro(dados, colunas[0]);
+        String texto = obterValorSeguro(dados, colunas[1]);
         String verificadoStr = obterValorSeguro(dados, colunas[2]);
-        String fakeStr = obterValorSeguro(dados, colunas[3]);
-        String justificativa = obterValorSeguro(dados, colunas[4]);
+        String url = obterValorSeguro(dados, colunas[3]);
+        String resumo = obterValorSeguro(dados, colunas[4]);
 
-        long id = idStr.isEmpty() ? 0L : Long.parseLong(idStr);
-        boolean verificado = "1simtrueverdadeiro".contains(verificadoStr);
-        boolean fake = "1simtrueverdadeiro".contains(fakeStr);
+        boolean verificado = verificadoStr.equalsIgnoreCase("1")
+                || verificadoStr.equalsIgnoreCase("sim")
+                || verificadoStr.equalsIgnoreCase("true")
+                || verificadoStr.equalsIgnoreCase("verdadeiro");
 
-        return new Mensagem(id, conteudo, verificado, fake, justificativa);
+        return new Mensagem(titulo, texto, verificado, url, resumo);
     }
 
     private static String obterValorSeguro(String[] dados, int indice) {
@@ -84,7 +90,7 @@ public class CSV {
         }
 
         if (indice >= 0 && indice < dados.length) {
-            return dados[indice].trim(); 
+            return dados[indice].trim().replace("'", "''"); 
         }
         return "";
     }

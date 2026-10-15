@@ -7,7 +7,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.dev.comunica.datasetcleaner.model.CSV;
+import org.dev.comunica.datasetcleaner.model.SQL;
 import org.dev.comunica.datasetcleaner.model.Mensagem;
 import org.dev.comunica.datasetcleaner.model.Coluna;
 
@@ -105,7 +105,7 @@ public class Frame extends JFrame {
             if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
                 try {
                     file = chooser.getSelectedFile();
-                    colunas = CSV.lerColunas(file);
+                    colunas = SQL.lerColunas(file);
 
                     for (JComboBox<Coluna> c : combos) {
                         c.setModel(new DefaultComboBoxModel<>(colunas));
@@ -129,14 +129,13 @@ public class Frame extends JFrame {
             }
 
             try {
-                mensagens = CSV.lerCSV(file, indexado);
+                mensagens = SQL.lerCSV(file, indexado);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
 
-            CSV.gerarCSV(mensagens, file.getName().substring(0, file.getName().length() - 4));
-            
-            // Dica: Adicione um aviso visual para saber que terminou!
+            SQL.gerarSQL(mensagens, file.getName().substring(0, file.getName().length() - 4));
+
             JOptionPane.showMessageDialog(this, "Arquivo gerado com sucesso!");
         });
 
